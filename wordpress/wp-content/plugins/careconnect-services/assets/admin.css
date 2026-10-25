@@ -1,0 +1,18 @@
+.ccs-review-overdue th {
+  border-left: 4px solid #f0a93c;
+}
+.ccs-review-overdue td {
+  background: #fff8e9;
+}
+.ccs-overdue {
+  display: inline-block;
+  background: #f0a93c;
+  color: #16294d;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+#ccs_related_ids {
+  min-width: 280px;
+  min-height: 110px;
+}

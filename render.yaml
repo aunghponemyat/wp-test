@@ -1,0 +1,70 @@
+# Render Blueprint: WordPress backend (Docker, free plan, Singapore).
+# Docs: https://render.com/docs/blueprint-spec
+# Secrets marked "sync: false" are prompted for in the Dashboard on first apply.
+services:
+  - type: web
+    name: careconnect-wp
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    # Static file => answers 200 immediately, before the bootstrap script has finished installing WordPress.
+    healthCheckPath: /wp-includes/images/blank.gif
+    envVars:
+      # --- database (MySQL on the VPS, TLS required) ---
+      - key: WORDPRESS_DB_HOST
+        sync: false            # e.g. <vps-public-ip>:3306
+      - key: WORDPRESS_DB_NAME
+        value: careconnect
+      - key: WORDPRESS_DB_USER
+        value: careconnect
+      - key: WORDPRESS_DB_PASSWORD
+        sync: false
+      - key: WORDPRESS_TABLE_PREFIX
+        value: wp_
+      - key: CC_DB_SSL
+        value: "1"
+      # --- stable auth keys/salts (otherwise they change on every restart because there is no disk) ---
+      - key: WORDPRESS_AUTH_KEY
+        generateValue: true
+      - key: WORDPRESS_SECURE_AUTH_KEY
+        generateValue: true
+      - key: WORDPRESS_LOGGED_IN_KEY
+        generateValue: true
+      - key: WORDPRESS_NONCE_KEY
+        generateValue: true
+      - key: WORDPRESS_AUTH_SALT
+        generateValue: true
+      - key: WORDPRESS_SECURE_AUTH_SALT
+        generateValue: true
+      - key: WORDPRESS_LOGGED_IN_SALT
+        generateValue: true
+      - key: WORDPRESS_NONCE_SALT
+        generateValue: true
+      # --- wp-config additions (official image supports WORDPRESS_CONFIG_EXTRA) ---
+      - key: WORDPRESS_CONFIG_EXTRA
+        value: |
+          if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') { $_SERVER['HTTPS'] = 'on'; }
+          if (getenv('CC_DB_SSL') !== '0') { define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL); }
+          define('WP_HOME', getenv('CC_SITE_URL'));
+          define('WP_SITEURL', getenv('CC_SITE_URL'));
+          define('DISALLOW_FILE_EDIT', true);
+          define('DISALLOW_FILE_MODS', true);
+          define('WP_AUTO_UPDATE_CORE', false);
+          define('WP_ENVIRONMENT_TYPE', 'production');
+      # --- first-run bootstrap ---
+      - key: WP_ADMIN_USER
+        value: ccadmin
+      - key: WP_ADMIN_PASSWORD
+        sync: false
+      - key: WP_ADMIN_EMAIL
+        value: admin@example.test
+      - key: CC_DEMO_PASSWORD
+        sync: false
+      # --- plugin / headless integration ---
+      - key: CC_FRONTEND_URL
+        sync: false            # https://<project>.vercel.app
+      - key: CC_ALLOWED_ORIGINS
+        sync: false            # comma-separated exact origins, e.g. https://<project>.vercel.app

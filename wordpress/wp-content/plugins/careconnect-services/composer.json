@@ -1,0 +1,25 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "9.6.38",
+        "yoast/phpunit-polyfills": "4.0.0",
+        "wp-coding-standards/wpcs": "3.4.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "1.2.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
+    },
+    "name": "careconnect/careconnect-services",
+    "description": "Fictional community care directory plugin",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.1"
+    }
+}

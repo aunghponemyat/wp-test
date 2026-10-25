@@ -1,0 +1,69 @@
+# Local, disposable development only. Never use these credentials in production.
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: careconnect
+      MYSQL_USER: careconnect
+      MYSQL_PASSWORD: local-demo-only
+      MYSQL_ROOT_PASSWORD: local-root-only
+    volumes:
+      - cc-db:/var/lib/mysql
+    healthcheck:
+      test: [CMD, mysqladmin, ping, -h, localhost, -plocal-root-only]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  wordpress:
+    build: .
+    ports: ["127.0.0.1:8080:80"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: careconnect
+      WORDPRESS_DB_USER: careconnect
+      WORDPRESS_DB_PASSWORD: local-demo-only
+      CC_DB_SSL: "0"
+      CC_SITE_URL: http://localhost:8080
+      CC_FRONTEND_URL: http://localhost:3000
+      CC_ALLOWED_ORIGINS: http://localhost:3000
+      WP_ADMIN_USER: ccadmin
+      WP_ADMIN_PASSWORD: dev
+      WP_ADMIN_EMAIL: admin@example.test
+      CC_DEMO_PASSWORD: local-demo-only
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', getenv('CC_SITE_URL'));
+        define('WP_SITEURL', getenv('CC_SITE_URL'));
+        define('DISALLOW_FILE_EDIT', true);
+        define('DISALLOW_FILE_MODS', true);
+        define('WP_ENVIRONMENT_TYPE', 'local');
+    volumes:
+      - ./wordpress/wp-content/plugins/careconnect-services:/var/www/html/wp-content/plugins/careconnect-services:ro
+  test-db:
+    profiles: [test]
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: tests-only
+    healthcheck:
+      test: [CMD, mysqladmin, ping, -h, localhost, -ptests-only]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    # No volume: this database is disposable and separate from the demo.
+  tests:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: docker/test.Dockerfile
+    user: "1000:1000"
+    depends_on:
+      test-db:
+        condition: service_healthy
+    entrypoint: [bash, /scripts/test-plugin.sh]
+    volumes:
+      - ./wordpress/wp-content/plugins/careconnect-services:/plugin
+      - ./scripts/test-plugin.sh:/scripts/test-plugin.sh:ro
+volumes:
+  cc-db:

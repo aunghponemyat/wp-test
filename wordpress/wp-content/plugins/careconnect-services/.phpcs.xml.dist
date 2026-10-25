@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="CareConnect">
+  <description>WordPress standards; filenames follow the explicit take-home layout.</description>
+  <file>careconnect-services.php</file><file>includes</file><file>uninstall.php</file><file>tests/test-careconnect.php</file>
+  <arg name="extensions" value="php"/><arg value="sp"/><arg name="parallel" value="4"/>
+  <config name="text_domain" value="careconnect-services"/>
+  <rule ref="WordPress">
+    <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+    <!-- CCS_ is prescribed by the brief; every symbol uses that namespace. -->
+    <exclude name="WordPress.NamingConventions.PrefixAllGlobals.ShortPrefixPassed"/>
+  </rule>
+  <rule ref="WordPress.NamingConventions.PrefixAllGlobals"><properties><property name="prefixes" type="array"><element value="CCS"/><element value="ccs"/></property></properties></rule>
+  <rule ref="WordPress.WP.Capabilities"><properties><property name="custom_capabilities" type="array"><element value="ccs_manage_home"/><element value="ccs_manage_settings"/><element value="edit_cc_services"/><element value="publish_cc_services"/><element value="edit_cc_messages"/></property></properties></rule>
+  <!-- The required type and review filters use indexed taxonomy/meta queries. -->
+  <rule ref="WordPress.DB.SlowDBQuery"><severity>0</severity></rule>
+</ruleset>

@@ -1,0 +1,391 @@
+# Copyright (C) 2026 
+# This file is distributed under the same license as the CareConnect Services plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: CareConnect Services 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/careconnect-services\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-25T09:31:44+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: careconnect-services\n"
+
+#. Plugin Name of the plugin
+#: careconnect-services.php
+msgid "CareConnect Services"
+msgstr ""
+
+#. Description of the plugin
+#: careconnect-services.php
+msgid "Content, publishing workflow and public API for the fictional CareConnect directory."
+msgstr ""
+
+#: includes/class-admin-columns.php:29
+msgid "Type"
+msgstr ""
+
+#: includes/class-admin-columns.php:30
+msgid "Last reviewed"
+msgstr ""
+
+#: includes/class-admin-columns.php:54
+msgid "Overdue"
+msgstr ""
+
+#: includes/class-admin-columns.php:68
+msgid "Review date"
+msgstr ""
+
+#: includes/class-admin-columns.php:70
+msgid "All review dates"
+msgstr ""
+
+#: includes/class-admin-columns.php:71
+msgid "Reviewed in last 12 months"
+msgstr ""
+
+#: includes/class-admin-columns.php:72
+msgid "Older than 12 months"
+msgstr ""
+
+#: includes/class-cli.php:17
+msgid "Seeded 9 fictional services and 4 articles."
+msgstr ""
+
+#: includes/class-cli.php:17
+msgid "Seed already exists; use --force to reset sample content."
+msgstr ""
+
+#: includes/class-contact.php:19
+msgid "Unable to send this message. Please try again later."
+msgstr ""
+
+#: includes/class-contact.php:55
+msgid "Enter a name of 1–100 characters."
+msgstr ""
+
+#: includes/class-contact.php:58
+msgid "Enter a valid email address."
+msgstr ""
+
+#: includes/class-contact.php:61
+msgid "Enter a message of 10–2000 characters."
+msgstr ""
+
+#: includes/class-contact.php:67
+msgid "Please check the highlighted fields."
+msgstr ""
+
+#: includes/class-contact.php:86
+msgid "CareConnect contact message"
+msgstr ""
+
+#: includes/class-cors.php:40
+msgid "This origin is not allowed."
+msgstr ""
+
+#: includes/class-cpt.php:19
+msgid "Services"
+msgstr ""
+
+#: includes/class-cpt.php:20
+msgid "Articles"
+msgstr ""
+
+#: includes/class-cpt.php:21
+msgid "Contact messages"
+msgstr ""
+
+#: includes/class-cpt.php:43
+msgid "Service types"
+msgstr ""
+
+#: includes/class-cpt.php:44
+msgid "Article categories"
+msgstr ""
+
+#: includes/class-home.php:21
+#: includes/class-home.php:74
+msgid "Home Content"
+msgstr ""
+
+#: includes/class-home.php:82
+msgid "Hero title"
+msgstr ""
+
+#: includes/class-home.php:82
+msgid "Hero subtitle (one sentence)"
+msgstr ""
+
+#: includes/class-home.php:84
+msgid "Featured services (displayed in list order)"
+msgstr ""
+
+#: includes/class-home.php:105
+msgid "Use the arrow buttons to reorder selected services. Only the configured featured count is saved."
+msgstr ""
+
+#: includes/class-home.php:105
+msgid "Move selected up"
+msgstr ""
+
+#: includes/class-home.php:105
+msgid "Move selected down"
+msgstr ""
+
+#: includes/class-meta-boxes.php:119
+msgid "Image URL must use HTTPS or a root-relative path."
+msgstr ""
+
+#: includes/class-meta-boxes.php:122
+msgid "Add meaningful alt text for the image."
+msgstr ""
+
+#: includes/class-meta-boxes.php:125
+msgid "Choose one valid type or category."
+msgstr ""
+
+#: includes/class-meta-boxes.php:131
+msgid "Short description is required and must be at most 200 characters."
+msgstr ""
+
+#: includes/class-meta-boxes.php:134
+msgid "Address is required."
+msgstr ""
+
+#: includes/class-meta-boxes.php:137
+msgid "Enter a valid Singapore phone number."
+msgstr ""
+
+#: includes/class-meta-boxes.php:142
+msgid "Last reviewed must be a valid date, no later than today."
+msgstr ""
+
+#: includes/class-meta-boxes.php:146
+msgid "Choose at most three other published services."
+msgstr ""
+
+#: includes/class-meta-boxes.php:150
+msgid "Related services must be other published services."
+msgstr ""
+
+#: includes/class-meta-boxes.php:159
+msgid "Coordinates are outside the valid range."
+msgstr ""
+
+#: includes/class-meta-boxes.php:252
+msgid "Content kept as a draft. Please correct:"
+msgstr ""
+
+#: includes/class-meta-boxes.php:264
+msgid "Service details"
+msgstr ""
+
+#: includes/class-meta-boxes.php:265
+msgid "Article details"
+msgstr ""
+
+#: includes/class-meta-boxes.php:279
+msgid "Short description (required, maximum 200 characters)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:280
+msgid "Eligibility"
+msgstr ""
+
+#: includes/class-meta-boxes.php:281
+msgid "Address (required)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:282
+msgid "Phone (required)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:283
+msgid "Opening hours"
+msgstr ""
+
+#: includes/class-meta-boxes.php:284
+msgid "Image URL"
+msgstr ""
+
+#: includes/class-meta-boxes.php:285
+msgid "Image alt text (required with an image)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:286
+msgid "Related services (maximum three)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:287
+msgid "Last reviewed (required)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:288
+msgid "Latitude"
+msgstr ""
+
+#: includes/class-meta-boxes.php:289
+msgid "Longitude"
+msgstr ""
+
+#: includes/class-meta-boxes.php:291
+msgid "Service type (required)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:291
+msgid "Category (required)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:291
+msgid "Choose one"
+msgstr ""
+
+#: includes/class-meta-boxes.php:341
+msgid "Message"
+msgstr ""
+
+#: includes/class-rest.php:265
+msgid "This content was not found."
+msgstr ""
+
+#: includes/class-roles.php:42
+msgid "CareConnect Editor"
+msgstr ""
+
+#: includes/class-roles.php:43
+msgid "CareConnect Publisher"
+msgstr ""
+
+#: includes/class-seed.php:78
+msgid "Home Care"
+msgstr ""
+
+#: includes/class-seed.php:79
+msgid "Community Clinic"
+msgstr ""
+
+#: includes/class-seed.php:80
+msgid "Senior Activity"
+msgstr ""
+
+#: includes/class-seed.php:96
+msgid "Our fictional community team takes time to understand your needs. Contact the programme to discuss a first visit, available support and any eligibility requirements."
+msgstr ""
+
+#: includes/class-seed.php:101
+msgid "For older residents and caregivers seeking community support; please contact the team to discuss suitability."
+msgstr ""
+
+#: includes/class-seed.php:107
+msgid "Illustration of a welcoming home with a heart"
+msgstr ""
+
+#: includes/class-seed.php:108
+msgid "Illustration of a community clinic with a medical cross"
+msgstr ""
+
+#: includes/class-seed.php:109
+msgid "Illustration of neighbours enjoying a community garden"
+msgstr ""
+
+#: includes/class-seed.php:135
+msgid "Guides"
+msgstr ""
+
+#: includes/class-seed.php:136
+msgid "Wellbeing"
+msgstr ""
+
+#: includes/class-seed.php:146
+msgid "Illustration of an open community care guide"
+msgstr ""
+
+#: includes/class-seed.php:158
+msgid "A little support. A stronger community."
+msgstr ""
+
+#: includes/class-seed.php:159
+msgid "Find community care, practical support and welcoming spaces for you and the people you care for."
+msgstr ""
+
+#: includes/class-settings.php:41
+msgid "CareConnect"
+msgstr ""
+
+#: includes/class-settings.php:42
+msgid "Settings"
+msgstr ""
+
+#: includes/class-settings.php:76
+msgid "Enter a valid contact email."
+msgstr ""
+
+#: includes/class-settings.php:80
+msgid "Deploy hook must start with https://api.vercel.com/."
+msgstr ""
+
+#: includes/class-settings.php:99
+msgid "CareConnect settings"
+msgstr ""
+
+#: includes/class-settings.php:104
+msgid "Contact email"
+msgstr ""
+
+#: includes/class-settings.php:105
+msgid "Featured count (1–6)"
+msgstr ""
+
+#: includes/class-settings.php:106
+msgid "Vercel deploy hook"
+msgstr ""
+
+#: includes/class-shortcode.php:33
+msgid "No services match your search."
+msgstr ""
+
+#: includes/class-shortcode.php:34
+msgid "Unable to load services. Please try again."
+msgstr ""
+
+#: includes/class-shortcode.php:35
+msgid "Loading services…"
+msgstr ""
+
+#: includes/class-shortcode.php:36
+msgid "Waking up the demo server…"
+msgstr ""
+
+#: includes/class-shortcode.php:37
+msgid "Previous"
+msgstr ""
+
+#: includes/class-shortcode.php:38
+msgid "Next"
+msgstr ""
+
+#: includes/class-shortcode.php:39
+#: includes/class-shortcode.php:44
+msgid "All service types"
+msgstr ""
+
+#: includes/class-shortcode.php:40
+msgid "Page"
+msgstr ""
+
+#: includes/class-shortcode.php:44
+msgid "Search services"
+msgstr ""
+
+#: includes/class-shortcode.php:44
+msgid "Service type"
+msgstr ""
+
+#: includes/class-shortcode.php:44
+msgid "Search"
+msgstr ""

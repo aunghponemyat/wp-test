@@ -1,0 +1,485 @@
+{
+  "layouts": [
+    {
+      "width": 360,
+      "path": "/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/articles/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/contact/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/privacy/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/bamboo-seniors-activity-centre/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/coral-weekend-wellness-club/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/evergreen-meal-delivery/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/harbour-community-clinic/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/lantern-health-screening-hub/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/maple-respite-support/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/pebble-digital-skills-corner/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/sunrise-home-visit-programme/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/services/willow-rehabilitation-corner/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/articles/five-tips-for-choosing-a-care-service/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/articles/how-to-prepare-for-a-first-clinic-visit/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/articles/staying-active-gentle-exercises-at-home/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "path": "/articles/understanding-eligibility-for-community-programmes/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/articles/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/contact/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/privacy/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/bamboo-seniors-activity-centre/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/coral-weekend-wellness-club/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/evergreen-meal-delivery/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/harbour-community-clinic/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/lantern-health-screening-hub/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/maple-respite-support/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/pebble-digital-skills-corner/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/sunrise-home-visit-programme/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/services/willow-rehabilitation-corner/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/articles/five-tips-for-choosing-a-care-service/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/articles/how-to-prepare-for-a-first-clinic-visit/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/articles/staying-active-gentle-exercises-at-home/",
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1280,
+      "path": "/articles/understanding-eligibility-for-community-programmes/",
+      "horizontalOverflow": false
+    }
+  ],
+  "accessibility": [
+    {
+      "width": 360,
+      "path": "/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/articles/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/contact/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/privacy/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/bamboo-seniors-activity-centre/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/coral-weekend-wellness-club/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/evergreen-meal-delivery/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/harbour-community-clinic/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/lantern-health-screening-hub/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/maple-respite-support/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/pebble-digital-skills-corner/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/sunrise-home-visit-programme/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/services/willow-rehabilitation-corner/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/articles/five-tips-for-choosing-a-care-service/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/articles/how-to-prepare-for-a-first-clinic-visit/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/articles/staying-active-gentle-exercises-at-home/",
+      "violations": []
+    },
+    {
+      "width": 360,
+      "path": "/articles/understanding-eligibility-for-community-programmes/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/articles/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/contact/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/privacy/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/bamboo-seniors-activity-centre/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/coral-weekend-wellness-club/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/evergreen-meal-delivery/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/harbour-community-clinic/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/lantern-health-screening-hub/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/maple-respite-support/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/pebble-digital-skills-corner/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/sunrise-home-visit-programme/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/services/willow-rehabilitation-corner/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/articles/five-tips-for-choosing-a-care-service/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/articles/how-to-prepare-for-a-first-clinic-visit/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/articles/staying-active-gentle-exercises-at-home/",
+      "violations": []
+    },
+    {
+      "width": 1280,
+      "path": "/articles/understanding-eligibility-for-community-programmes/",
+      "violations": []
+    }
+  ],
+  "workflows": [
+    "Keyboard skip link, mobile navigation, search, type filter and empty state",
+    "Exact-origin CORS preflight and forbidden-origin rejection",
+    "WordPress shortcode search, type and empty state",
+    "Contact JSON POST with success announcement",
+    "Editor draft validation → Pending Review → Publisher publish → unpublish; live paging in both directories",
+    "Cold-start hint after four seconds and recovery"
+  ],
+  "pageErrors": [],
+  "keyboard": [
+    {
+      "path": "/",
+      "focusStops": 30,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/",
+      "focusStops": 35,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/articles/",
+      "focusStops": 22,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/contact/",
+      "focusStops": 19,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/privacy/",
+      "focusStops": 14,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/bamboo-seniors-activity-centre/",
+      "focusStops": 21,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/coral-weekend-wellness-club/",
+      "focusStops": 20,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/evergreen-meal-delivery/",
+      "focusStops": 20,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/harbour-community-clinic/",
+      "focusStops": 21,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/lantern-health-screening-hub/",
+      "focusStops": 20,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/maple-respite-support/",
+      "focusStops": 20,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/pebble-digital-skills-corner/",
+      "focusStops": 20,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/sunrise-home-visit-programme/",
+      "focusStops": 21,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/services/willow-rehabilitation-corner/",
+      "focusStops": 20,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/articles/five-tips-for-choosing-a-care-service/",
+      "focusStops": 15,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/articles/how-to-prepare-for-a-first-clinic-visit/",
+      "focusStops": 15,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/articles/staying-active-gentle-exercises-at-home/",
+      "focusStops": 15,
+      "visibleFocus": true,
+      "completedCycle": true
+    },
+    {
+      "path": "/articles/understanding-eligibility-for-community-programmes/",
+      "focusStops": 15,
+      "visibleFocus": true,
+      "completedCycle": true
+    }
+  ]
+}

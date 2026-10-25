@@ -1,0 +1,162 @@
+[
+  {
+    "path": "404/index.html",
+    "title": "Page not found | CareConnect",
+    "description": "This page could not be found. Explore the CareConnect community care directory.",
+    "canonical": "http://localhost:3000/404/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "_not-found/index.html",
+    "title": "Page not found | CareConnect",
+    "description": "This page could not be found. Explore the CareConnect community care directory.",
+    "canonical": "http://localhost:3000/404/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "articles/five-tips-for-choosing-a-care-service/index.html",
+    "title": "Five tips for choosing a care service | CareConnect",
+    "description": "Start with your needs, ask questions and take time to find support that feels right.",
+    "canonical": "http://localhost:3000/articles/five-tips-for-choosing-a-care-service/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "articles/how-to-prepare-for-a-first-clinic-visit/index.html",
+    "title": "How to prepare for a first clinic visit | CareConnect",
+    "description": "A little preparation can help you feel more comfortable at your first appointment.",
+    "canonical": "http://localhost:3000/articles/how-to-prepare-for-a-first-clinic-visit/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "articles/index.html",
+    "title": "Articles | CareConnect",
+    "description": "Practical fictional guides on community care, wellbeing and getting started with support.",
+    "canonical": "http://localhost:3000/articles/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "articles/staying-active-gentle-exercises-at-home/index.html",
+    "title": "Staying active: gentle exercises at home | CareConnect",
+    "description": "Explore small, comfortable ways to add movement to your day.",
+    "canonical": "http://localhost:3000/articles/staying-active-gentle-exercises-at-home/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "articles/understanding-eligibility-for-community-programmes/index.html",
+    "title": "Understanding eligibility for community programmes | CareConnect",
+    "description": "Learn which questions to ask when exploring a community programme.",
+    "canonical": "http://localhost:3000/articles/understanding-eligibility-for-community-programmes/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "contact/index.html",
+    "title": "Contact | CareConnect",
+    "description": "Get in touch with the fictional CareConnect team. Share a question about this community care directory demo.",
+    "canonical": "http://localhost:3000/contact/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "index.html",
+    "title": "Community care, closer to home | CareConnect",
+    "description": "Find fictional community care services, practical guides and welcoming spaces for older residents and caregivers.",
+    "canonical": "http://localhost:3000/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "privacy/index.html",
+    "title": "Privacy | CareConnect",
+    "description": "How the fictional CareConnect demonstration handles contact messages and protects your details.",
+    "canonical": "http://localhost:3000/privacy/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/bamboo-seniors-activity-centre/index.html",
+    "title": "Bamboo Seniors Activity Centre | CareConnect",
+    "description": "Make connections through gentle activities and shared interests.",
+    "canonical": "http://localhost:3000/services/bamboo-seniors-activity-centre/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/coral-weekend-wellness-club/index.html",
+    "title": "Coral Weekend Wellness Club | CareConnect",
+    "description": "Spend a relaxed weekend moving, learning and meeting neighbours.",
+    "canonical": "http://localhost:3000/services/coral-weekend-wellness-club/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/evergreen-meal-delivery/index.html",
+    "title": "Evergreen Meal Delivery | CareConnect",
+    "description": "Balanced meals and a friendly check-in for older neighbours.",
+    "canonical": "http://localhost:3000/services/evergreen-meal-delivery/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/harbour-community-clinic/index.html",
+    "title": "Harbour Community Clinic | CareConnect",
+    "description": "A welcoming place for everyday health checks and advice.",
+    "canonical": "http://localhost:3000/services/harbour-community-clinic/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/index.html",
+    "title": "Services | CareConnect",
+    "description": "Browse fictional home care, community clinics and senior activities. Search for support that suits your needs.",
+    "canonical": "http://localhost:3000/services/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/lantern-health-screening-hub/index.html",
+    "title": "Lantern Health Screening Hub | CareConnect",
+    "description": "Simple health screenings with guidance on your next steps.",
+    "canonical": "http://localhost:3000/services/lantern-health-screening-hub/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/maple-respite-support/index.html",
+    "title": "Maple Respite Support | CareConnect",
+    "description": "Short breaks and practical support for family caregivers.",
+    "canonical": "http://localhost:3000/services/maple-respite-support/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/pebble-digital-skills-corner/index.html",
+    "title": "Pebble Digital Skills Corner | CareConnect",
+    "description": "Learn everyday digital skills at a comfortable, supported pace.",
+    "canonical": "http://localhost:3000/services/pebble-digital-skills-corner/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/sunrise-home-visit-programme/index.html",
+    "title": "Sunrise Home Visit Programme | CareConnect",
+    "description": "Friendly support for everyday routines, brought to your home.",
+    "canonical": "http://localhost:3000/services/sunrise-home-visit-programme/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  },
+  {
+    "path": "services/willow-rehabilitation-corner/index.html",
+    "title": "Willow Rehabilitation Corner | CareConnect",
+    "description": "Guided movement sessions to support confidence and independence.",
+    "canonical": "http://localhost:3000/services/willow-rehabilitation-corner/",
+    "h1": 1,
+    "robots": "noindex, nofollow"
+  }
+]

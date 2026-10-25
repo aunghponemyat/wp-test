@@ -1,0 +1,13 @@
+node_modules/
+web/.next/
+web/out/
+**/vendor/
+.env*
+!.env.example
+!**/.env.example
+.phpunit.result.cache
+.phpcs-cache
+coverage/
+.DS_Store
+*.tsbuildinfo
+web/next-env.d.ts

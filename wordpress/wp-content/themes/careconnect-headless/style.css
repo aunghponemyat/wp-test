@@ -1,0 +1,8 @@
+/*
+Theme Name: CareConnect Headless
+Description: Minimal headless theme. Redirects the public front end to the Next.js site. Only the WP Services Demo page renders.
+Version: 1.0.0
+Text Domain: careconnect-headless
+Requires PHP: 8.1
+*/
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;color:#1A1A1A}
