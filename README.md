@@ -80,6 +80,8 @@ Public namespace: `/wp-json/careconnect/v1`.
 | GET    | `/home`                                     | Editable hero, published featured services, three latest articles          |
 | POST   | `/contact`                                  | JSON `{name,email,message,website,ts}`; private save and best-effort email |
 
+You can test the sample public API for these endpoints using the following base url prefix hosted on Render: **https://careconnect-wp.onrender.com/wp-json/careconnect/v1**
+
 GET success responses use `Cache-Control: public, max-age=60`; contact and error responses use `no-store`. List responses include totals and pagination headers. CORS accepts only exact `CC_ALLOWED_ORIGINS`, without credentials. Requests without an Origin remain possible because these endpoints are public. All content queries hard-code `publish`; core REST exposure is disabled for the custom types and anonymous core users endpoints are removed.
 
 Contact checks a honeypot, a three-second minimum/two-hour maximum form age, per-field lengths, a 16 KiB body limit and five attempts per hour per salted IP hash. It saves `cc_message` privately before attempting email. The contact form does not automatically replay a POST with an uncertain outcome; a visitor can retry deliberately. Only GETs retry automatically. The server shows “Waking up the demo server…” in the UI after four seconds of waiting.
