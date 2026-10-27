@@ -22,13 +22,15 @@ The guide distinguishes implemented features from production proposals. Vercel c
 
 For visitor experience, you can test the website here: **https://wp-ccreiner.vercel.app**
 
-For editor and publisher level access with content creation privileges, give it a try here: **https://careconnect-wp.onrender.com/wp-admin/**
+For editor and publisher level access with content creation privileges, give it a try here:
+**https://careconnect-wp.onrender.com/wp-admin/**
+
 Credentials
 ```
 Editor Username: demo-editor
 Publisher Username: demo-publisher
 ```
-Please contact [developer](aghonemyat@gmail.com) for the password.
+Please contact [developer](mailto:aghonemyat@gmail.com) for the password.
 
 ## Local setup
 
