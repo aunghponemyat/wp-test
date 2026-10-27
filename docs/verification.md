@@ -1,6 +1,6 @@
 # Verification — 25 October 2026
 
-Local implementation verified against WordPress **6.9.4**, PHP 8.3 in the prescribed WordPress image family, disposable MySQL 8, Next.js **16.4.3**, and Chromium. Dependency manifests/lockfiles contain the resolved versions. The original supplied files match `files.zip` byte-for-byte; their contents were preserved in the required directory layout.
+Local implementation verified against WordPress **6.9.4**, PHP 8.3 in the prescribed WordPress image family, disposable MySQL 8, Next.js **16.4.3**, and Chromium. Dependency manifests/lockfiles contain the resolved versions. The original flat supplied files match `files.zip` byte-for-byte. Their copies initially matched as well; the canonical VPS setup script later received the documented MySQL 8.4 compatibility correction below.
 
 ## Results
 
@@ -67,3 +67,13 @@ Static exports retain previously published HTML until rebuild/cache replacement.
 ## CMS freshness regression — 26 October 2026
 
 A normal rebuild reproduced an outdated Coral Weekend Wellness Club description despite the live API containing the saved edit. Inspection found an old response in `.next/cache/fetch-cache` with a 31,536,000-second lifetime. The new npm `prebuild` hook removes that response-cache directory before each static export while retaining compiler caches. The corrected `npm run build` passed with `.env.local`, and the regenerated HTML and response cache both contained the current edit. A fresh Chromium session confirmed the live preview displays “Indeed!” under “About this service”. The unchanged introductory sentence correctly comes from the separate short-description field. ESLint and the formatting check passed. No CMS content was changed during this investigation.
+
+## VPS script compatibility — 26 October 2026
+
+The supplied script checked `have_ssl`, a variable removed in MySQL 8.4. A read-only query against the local MySQL **8.4.13** server reproduced the missing variable and confirmed the active `mysql_main` TLS channel reports `Yes`. The canonical script now checks that channel and rejects versions outside MySQL 8.x or below 8.0.23, the minimum for CIDR account hosts. Bash syntax checking passed; isolated version-guard checks accepted 8.0.23, 8.0.44 and 8.4.13 and rejected 8.0.22, 9.0.0 and MariaDB 10.11.8. Both user-provided Render ranges validate as canonical IPv4 `/24` networks. These checks did not install software, change MySQL configuration or modify firewall rules on either the local host or the VPS. Actual remote deployment remains untested.
+
+## Small-VPS memory recovery — 26 October 2026
+
+The user supplied kernel evidence of MySQL being OOM-killed on a shared 957 MiB VPS with no swap. The user subsequently enabled a 2 GiB swap file and reported 328 MiB available RAM and 13 GiB free disk. The setup script now checks available RAM plus free swap before package installation and refuses to proceed below a conservative 512 MiB combined threshold. Isolated guard checks rejected 12 MiB/no swap and a value immediately below the threshold, and accepted the threshold and 328 MiB plus 2 GiB swap. This heuristic does not guarantee capacity.
+
+The optional `scripts/mysql-low-memory.cnf` passed `mysqld --validate-config` in the local MySQL 8.0 and 8.4 images; `--print-defaults` confirmed the MySQL 8.0 image loads every setting. It preserves Performance Schema, reduces the buffer pool and log buffer, and limits connections/caches/temporary-table memory. This validates configuration compatibility, not the VPS's runtime memory budget. The agent has not applied it remotely or verified completion of the interrupted package installation.

@@ -10,6 +10,15 @@ IPS="${1:-}"; [ -n "$IPS" ] || { echo "Pass Render outbound IPs as one quoted ar
 for ip in $IPS; do [[ "$ip" =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}(/[0-9]{1,2})?$ ]] || { echo "Bad IP/CIDR: $ip"; exit 1; }; done
 . /etc/os-release; [ "$ID" = "ubuntu" ] || { echo "Ubuntu expected, found $ID. Adjust the script before running."; exit 1; }
 
+# Package installation starts MySQL, so check headroom before invoking apt.
+# This conservative guard is not a guarantee or a MySQL minimum requirement.
+CC_AVAILABLE_MEMORY_KIB="$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)"
+CC_FREE_SWAP_KIB="$(awk '/^SwapFree:/ {print $2}' /proc/meminfo)"
+if (( CC_AVAILABLE_MEMORY_KIB + CC_FREE_SWAP_KIB < 524288 )); then
+  echo "Less than 512 MiB of available RAM plus free swap. Free resources or add swap before installing MySQL."
+  exit 1
+fi
+
 DB=careconnect; USER_NAME=careconnect; PASSFILE=/root/.careconnect-db-pass
 
 # 1. install MySQL only if missing
@@ -18,6 +27,17 @@ if ! command -v mysqld >/dev/null 2>&1; then
   apt-get update -y && apt-get install -y mysql-server
 fi
 systemctl enable --now mysql
+
+# CIDR account hosts require MySQL 8.0.23 or newer. Check before changing config.
+DB_SERVER_VERSION="$(mysql -N -e 'SELECT VERSION()')"
+if [[ ! "$DB_SERVER_VERSION" =~ ^8\.([0-9]+)\.([0-9]+) ]]; then
+  echo "MySQL 8.0.23 or newer in the 8.x series is required; found $DB_SERVER_VERSION."
+  exit 1
+fi
+if (( 10#${BASH_REMATCH[1]} == 0 && 10#${BASH_REMATCH[2]} < 23 )); then
+  echo "MySQL 8.0.23 or newer is required for CIDR account hosts; found $DB_SERVER_VERSION."
+  exit 1
+fi
 
 # 2. TLS required, listen on network, no DNS lookups (MySQL 8 auto-generates a self-signed server cert on first start)
 cat > /etc/mysql/mysql.conf.d/zz-careconnect.cnf <<CNF
@@ -28,9 +48,10 @@ tls_version = TLSv1.2,TLSv1.3
 skip_name_resolve = ON
 CNF
 systemctl restart mysql
-mysql -N -e "SHOW VARIABLES LIKE 'have_ssl'" | grep -q YES || { echo "MySQL TLS is not enabled; stop."; exit 1; }
+# have_ssl was removed in MySQL 8.4; inspect the active main TLS channel instead.
+mysql -N -e "SELECT VALUE FROM performance_schema.tls_channel_status WHERE CHANNEL = 'mysql_main' AND PROPERTY = 'Enabled'" | grep -qi '^yes$' || { echo "MySQL TLS is not enabled; stop."; exit 1; }
 
-# 3. database + one user per allowed IP, TLS enforced per account
+# 3. database + one user per allowed IP/CIDR range, TLS enforced per account
 if [ ! -s "$PASSFILE" ]; then umask 077; openssl rand -hex 24 > "$PASSFILE"; fi
 chmod 600 "$PASSFILE"; PASS="$(cat "$PASSFILE")"
 mysql <<SQL

@@ -1,8 +1,22 @@
 # CareConnect
 
-A fictional, accessible community-care directory with a WordPress editorial backend and a statically exported Next.js frontend. The supplied brief is **`AGENT.md`**, singular. [Design](docs/design.md) describes the architecture, content model, hosting proposal and operational tradeoffs. [Verification](docs/verification.md) records the checks actually run.
+A fictional, accessible community-care directory with a WordPress editorial backend and a statically exported Next.js frontend. The supplied brief is **`AGENT.md`**, singular. The separate [production design](docs/design.md), also available as a [three-page PDF](docs/design.pdf), explains the seven design requirements for 20,000 monthly visits and five editors, using client-friendly language and diagrams. [Verification](docs/verification.md) records the checks actually run.
 
 **Media is non-persistent in the demo (no uploads; images are static files/URLs).** All seed services, addresses, phones and contact examples are fictional. Do not submit real personal or medical information to this demonstration.
+
+## Production design guide
+
+| Guideline requirement                                           | Dedicated documentation                                                                |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Architecture, request flow, CMS choice and rejected alternative | [1. Architecture](docs/design.md#1-architecture--how-visitors-reach-the-content)       |
+| Content fields, roles and publishing workflow                   | [2. Content model](docs/design.md#2-content-model--what-the-team-manages)              |
+| Cloud, Singapore region, environments and deployment            | [3. Hosting](docs/design.md#3-hosting--locations-environments-and-releases)            |
+| HTTPS, MFA, permissions, secrets and attack protection          | [4. Security](docs/design.md#4-security--protecting-visitors-and-the-team)             |
+| Monitoring, logs, backup/restore frequency and RPO/RTO          | [5. Operations](docs/design.md#5-operations--detecting-problems-and-recovering)        |
+| Monthly estimate and assumptions                                | [6. Cost](docs/design.md#6-cost--estimated-monthly-budget)                             |
+| Known gaps and another week's work                              | [7. Risks and next steps](docs/design.md#7-risks-and-next-steps--another-working-week) |
+
+The guide distinguishes implemented features from production proposals. Vercel caches public pages globally, so the existing setup does **not** establish Singapore-only residency for all copies. MFA, monitored publishing, scheduled backups and recovery targets remain production work. The proposed Singapore hosting and costs do not describe changes applied to the running services.
 
 ## Local setup
 
@@ -56,15 +70,15 @@ docker compose -p careconnect-local exec wordpress wp --allow-root careconnect s
 
 Public namespace: `/wp-json/careconnect/v1`.
 
-| Method | Route | Purpose |
-|---|---|---|
-| GET | `/services?search=&type=&page=1&per_page=9` | Search, type filter, title order, bounded paging |
-| GET | `/services/{slug}` | Published detail and published related services |
-| GET | `/service-types` | Types with published-service counts |
-| GET | `/articles?page=1&per_page=9&category=` | Published articles, newest first |
-| GET | `/articles/{slug}` | Published article detail |
-| GET | `/home` | Editable hero, published featured services, three latest articles |
-| POST | `/contact` | JSON `{name,email,message,website,ts}`; private save and best-effort email |
+| Method | Route                                       | Purpose                                                                    |
+| ------ | ------------------------------------------- | -------------------------------------------------------------------------- |
+| GET    | `/services?search=&type=&page=1&per_page=9` | Search, type filter, title order, bounded paging                           |
+| GET    | `/services/{slug}`                          | Published detail and published related services                            |
+| GET    | `/service-types`                            | Types with published-service counts                                        |
+| GET    | `/articles?page=1&per_page=9&category=`     | Published articles, newest first                                           |
+| GET    | `/articles/{slug}`                          | Published article detail                                                   |
+| GET    | `/home`                                     | Editable hero, published featured services, three latest articles          |
+| POST   | `/contact`                                  | JSON `{name,email,message,website,ts}`; private save and best-effort email |
 
 GET success responses use `Cache-Control: public, max-age=60`; contact and error responses use `no-store`. List responses include totals and pagination headers. CORS accepts only exact `CC_ALLOWED_ORIGINS`, without credentials. Requests without an Origin remain possible because these endpoints are public. All content queries hard-code `publish`; core REST exposure is disabled for the custom types and anonymous core users endpoints are removed.
 
@@ -91,18 +105,22 @@ WPCS checks all authored runtime PHP and integration tests. Its narrow ruleset e
 
 Frontend `.env.local` (only public values):
 
-| Variable | Local example |
-|---|---|
+| Variable                 | Local example                                  |
+| ------------------------ | ---------------------------------------------- |
 | `NEXT_PUBLIC_WP_API_URL` | `http://localhost:8080/wp-json/careconnect/v1` |
-| `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` |
+| `NEXT_PUBLIC_SITE_URL`   | `http://localhost:3000`                        |
 
 Render's supplied `render.yaml` declares `WORDPRESS_DB_HOST`, `WORDPRESS_DB_NAME`, `WORDPRESS_DB_USER`, `WORDPRESS_DB_PASSWORD`, `WORDPRESS_TABLE_PREFIX`, `CC_DB_SSL`, eight `WORDPRESS_*_KEY`/`*_SALT` values, `WORDPRESS_CONFIG_EXTRA`, `WP_ADMIN_USER`, `WP_ADMIN_PASSWORD`, `WP_ADMIN_EMAIL`, `CC_DEMO_PASSWORD`, `CC_FRONTEND_URL` and `CC_ALLOWED_ORIGINS`. `CC_SITE_URL` optionally overrides the bootstrap default from `RENDER_EXTERNAL_URL`. Keep deploy-hook URLs and all secrets out of the frontend and source control. `.env*`, dependencies and build outputs are ignored; `.env.example` is committed.
 
 ## Deployment runbook
 
-These are deployment instructions, not a claim of a completed remote deployment. No VPS firewall, Render service or Vercel project has been changed.
+The owner reports that Vercel, Render and VPS MySQL are deployed and communicating. These instructions describe that setup; the agent has not changed those remote services or independently audited their private configuration, firewall rules or backup arrangements.
+
+Bootstrap order: **create the Render service → obtain its outbound ranges → configure VPS MySQL → finish the Render deployment → deploy Vercel**. Creating the Render service does not require WordPress to have a working database yet. Apply the Blueprint first, using the VPS address for `WORDPRESS_DB_HOST` and a temporary placeholder for `WORDPRESS_DB_PASSWORD` if the generated database password is not available. The initial bootstrap can report that the database is unreachable; do not wait for a functional WordPress site before opening Connect → Outbound. After MySQL is ready, replace the placeholder with the real password and redeploy to rerun bootstrap.
 
 ### MySQL on the VPS
+
+Check `free -h`, `swapon --show`, `df -h /` and existing workloads first. A shared 1 GiB VPS exhausted RAM during MySQL package setup in this session. The canonical script now refuses to start if available RAM plus free swap is below a conservative 512 MiB threshold; this is a protective heuristic, not a MySQL minimum or a capacity guarantee. On a small shared VPS, arrange memory headroom before installation and install the optional `scripts/mysql-low-memory.cnf` as `/etc/mysql/mysql.conf.d/zz-careconnect-memory.cnf` before starting or configuring the server. That profile was accepted by MySQL 8.0 and 8.4 configuration validation. It reduces buffers and connections while retaining Performance Schema for the TLS readiness check. It is not a hard process memory limit; monitor actual usage and retain enough headroom for existing applications. Swap created manually must be added to `/etc/fstab` if it should survive reboot.
 
 1. Copy the provided script: `scp scripts/vps-mysql-setup.sh do-sg:/tmp/`, then connect with `ssh do-sg`.
 2. Get the service's current Singapore **outbound** IP addresses from Render Dashboard → service → Connect → Outbound. Verify them for the actual service; do not assume inbound addresses are equivalent.
@@ -110,12 +128,14 @@ These are deployment instructions, not a claim of a completed remote deployment.
 4. Read `/root/.careconnect-db-pass` once with sudo and enter it directly into Render's secret prompt. Do not copy it into this repository, logs or shell history. Restrict the VPS provider firewall to the same sources on TCP 3306.
 5. Verify on the VPS: `mysql -e "SHOW VARIABLES LIKE 'require_secure_transport'"` should show `ON`. Check effective MySQL grants, UFW/provider rules and connectivity from Render. These external controls have not been tested here.
 
+Pass Render's full CIDR ranges unchanged as the quoted, space-separated argument. MySQL supports CIDR account hosts from 8.0.23 onward; the script checks the server version before changing its configuration. The canonical script in `scripts/` was intentionally patched on 26 October to replace the removed MySQL 8.4 `have_ssl` check with the active `performance_schema.tls_channel_status` check and to add the pre-install memory guard after a confirmed remote OOM event. These are documented bug exceptions to the supplied-file protection rule. The updated TLS query was checked against local MySQL 8.4. The owner subsequently reported a working deployment, but the agent has not accessed the VPS; database grants, TLS settings and firewall rules remain independently unverified. The original flat starter copy is retained for reference. See the [MySQL CIDR account documentation](https://dev.mysql.com/doc/refman/8.4/en/account-names.html) and [MySQL 8.4 removal notes](https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-0.html).
+
 TLS note: the supplied `MYSQLI_CLIENT_SSL` connection encrypts traffic but does not verify the self-signed server certificate. IP allow-lists and per-IP DB users reduce exposure but do not provide certificate authentication. A production deployment should mount a trusted CA and adapt the connection or use a private network/tunnel.
 
 ### WordPress on Render
 
-1. Push the repository to GitHub/GitLab. Render Dashboard → New → **Blueprint** → select repository → Apply. Use the supplied Docker web service Blueprint, Singapore region and free plan; no dedicated WordPress template is assumed.
-2. Fill prompted DB/admin/demo secrets and the final `CC_FRONTEND_URL` / `CC_ALLOWED_ORIGINS`. If the frontend URL is not yet known, use a temporary value and replace it before public testing.
+1. Push the repository to GitHub/GitLab. Render Dashboard → New → **Blueprint** → select repository → Apply, if the service was not already created to obtain its outbound ranges. Use the supplied Docker web service Blueprint, Singapore region and free plan; no dedicated WordPress template is assumed.
+2. Fill prompted DB/admin/demo secrets and the final `CC_FRONTEND_URL` / `CC_ALLOWED_ORIGINS`. Replace any temporary database password with the password generated during VPS setup, then redeploy. If the frontend URL is not yet known, use a temporary value and replace it before public testing.
 3. Watch for `[cc-bootstrap] bootstrap complete`. The health GIF can return 200 before setup finishes, so also check the JSON endpoint and admin login.
 4. Confirm `/wp-json/careconnect/v1/services` returns nine services and `/articles` returns four. Confirm the role, draft and contact boundaries against the deployed origin.
 5. The Render free service spins down after roughly fifteen idle minutes and can take time to wake. Its filesystem resets on restart/redeploy; database content persists. Stable salts come from Render environment values. Do not enable uploads or depend on container filesystem media.
@@ -132,7 +152,7 @@ Static export freshness: new or changed detail pages appear only after a success
 
 ## Assumptions and design decisions
 
-- `AGENT.md` is the requested source of truth. Its flattened starter files were copied byte-for-byte into `docker/`, `scripts/` and `wordpress/wp-content/themes/careconnect-headless/`. Original files and copied supplied behavior remain unchanged.
+- `AGENT.md` is the requested source of truth. Its flattened starter files were initially copied byte-for-byte into `docker/`, `scripts/` and `wordpress/wp-content/themes/careconnect-headless/`. Original flat files remain unchanged. The canonical VPS setup script now contains the documented MySQL 8.4 compatibility fix and pre-install memory guard; other copied supplied behavior remains unchanged.
 - The provided Dockerfile's floating `wordpress:6-php8.3-apache` reference is preserved under the explicit do-not-modify rule. It resolved to **WordPress 6.9.4** during verification. The full `6.9.4-php8.3-apache` tag was checked in Docker Hub; the new test image pins that full tag and observed digest. Pin/review the application image and WP-CLI artifact before a production release; no unverified major upgrade was performed.
 - The uninstall paragraph says “four CPTs” but defines three; uninstall removes the three specified types and both specified taxonomies. Deactivation only flushes rewrites; data deletion occurs on explicit uninstall.
 - A single article category is required, matching the service single-type workflow. Empty optional coordinates are represented as `null` in the API; maps render only when both coordinates exist.

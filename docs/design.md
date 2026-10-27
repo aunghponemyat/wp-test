@@ -1,76 +1,119 @@
-# CareConnect design
+# CareConnect: taking the directory to production
 
-## Architecture
+**Planning brief:** 20,000 monthly visits · five editors · data kept in Singapore.  
+**Reviewed:** 28 October 2026. This concise design separates existing features from proposed production work. The owner reports that the three hosted services are running; private settings and recovery arrangements have not been independently audited.
 
-```text
-Visitor ──► Vercel (Next.js static export, CDN)
-              │  build time: fetch content (retry, WP may be asleep)
-              │  run time (browser): search + contact POST
-              ▼
-        Render Web Service (Docker, free, Singapore) ── WordPress + plugin + headless theme
-              │  mysqli over TLS, port 3306, allow-listed source IPs
-              ▼
-        MySQL 8 on the user's VPS (ssh alias: do-sg), UFW restricted, TLS required
+## 1. Architecture — how visitors reach the content
+
+CareConnect combines a Next.js public website, a WordPress editing area and a MySQL database holding content, accounts and private enquiries. The **CareConnect Services** plugin supplies the directory features.
+
+```mermaid
+flowchart TB
+    Visitor["Visitor"] -->|"Read ready-made pages"| Website["Public website · Vercel"]
+    Visitor -->|"Search or send an enquiry"| CMS["WordPress · Render Singapore"]
+    Team["Editors and publishers"] -->|"Secure admin login"| CMS
+    CMS <-->|"Encrypted connection"| Database[("MySQL · existing Singapore VPS¹")]
+    CMS -.->|"Request update, when configured"| Build["Website rebuild"]
+    Build -->|"Fetch published content"| CMS
+    Build -->|"Release updated pages"| Website
 ```
 
-WordPress supplies the editorial interface, familiar draft/review workflow and capability model. The `careconnect-services` plugin owns the content schema, validation, API, seed records and publishing hook. The supplied theme only redirects public requests and renders the shortcode demonstration. We rejected Sanity for this build because it would replace the required WordPress administration and plugin capability exercises with a separate editorial platform.
+¹ A VPS is a rented server. Confirm its Singapore location in the hosting account.
 
-Next.js App Router renders static HTML for the home, article, service-detail and policy pages. Its build helper fetches published records from WordPress with a 30-second timeout, six retries and ten-second back-off. The npm prebuild step clears the persistent fetch-response cache so each export uses current CMS data while retaining compiler caches. Dynamic routes enumerate every published slug; article and service enumeration traverses every API page. There are no server Route Handlers, middleware, runtime secrets, ISR or image-optimization service. Search and contact use small client components. A mobile navigation toggle is the only shared client interaction.
+**Visitor journey:** reading a page usually needs only the public website. Search asks WordPress for published results. Enquiries are stored privately before email is attempted; demo email is best-effort. Visitors never access the database directly. Existing pages can remain readable during a WordPress outage, while search and enquiries fail.
 
-A visitor receives cached HTML and small local SVG illustrations from the CDN. Searching sends a credential-free GET to WordPress, combining keyword, type and pagination. Contact sends one JSON POST after the form has been displayed for at least three seconds. Its result confirms private database storage; email delivery is best-effort. Queries taking over four seconds show a cold-start hint. GET requests retry automatically; ambiguous contact POST failures require a deliberate retry to avoid duplicates.
+**Content updates:** saving changes updates the database immediately; public pages change after a successful rebuild. The plugin can request this through a configured Vercel deployment link. Recent testing found updated WordPress content without a new deployment, so this connection needs confirmation. The build command, `npm run build`, clears saved content responses before generating pages.
 
-Publication and home-option changes call a debounced Vercel deploy hook. Content changes require a successful rebuild before static pages reflect them. Previously published HTML can remain publicly cached until that rebuild; immediate withdrawal is not guaranteed by this architecture. Drafts that have never been published are never exported or returned by the API. A production requirement for immediate withdrawal would need an authenticated runtime gate or an operational CDN removal process, changing the static-only proposal.
+**CMS choice:** WordPress offers familiar editing, draft review and individual permissions, with directory rules kept together in the plugin. **Sanity was rejected** because it would replace the required WordPress editing experience and require a different integration.
 
-## Content model
+## 2. Content model — what the team manages
 
-| Entity | Storage and key fields | Public representation |
-|---|---|---|
-| Service | `cc_service`; title/body; one `cc_service_type`; `_cc_` descriptions, eligibility, address, phone, hours, image URL/alt, related IDs, review date, optional coordinates | Card and sanitized HTML detail |
-| Article | `cc_article`; title, body, excerpt summary, post date; one `cc_article_category`; URL/alt | Card and sanitized HTML detail |
-| Contact | Private `cc_message`; name, message, `_cc_email` | Only a generic submission acknowledgement |
-| Home | `ccs_home` option: hero copy and ordered featured IDs | Hero, published featured services, three latest articles |
-| Settings | `ccs_settings`: contact destination, featured count, optional deploy hook | Administrator-only option; never serialized publicly |
+| Content         | Main fields                                                                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service         | Name, type, short introduction, full description, eligibility, address, phone, hours, image link/alternative text, review date, up to three related services, optional map location |
+| Article         | Title, summary, full text, category, publication date, image link/alternative text                                                                                                  |
+| Home page       | Heading, supporting sentence, ordered featured services; latest articles appear automatically                                                                                       |
+| Private enquiry | Sender name, email and message; administrators only                                                                                                                                 |
 
-All three post types disable core REST exposure and public queries. The custom API hard-codes published status for listings, details, featured items, related items and type counts. Input cannot override that status. Service validation enforces required metadata, bounded descriptions, Singapore phone normalization, single taxonomy selection, real calendar dates, safe image schemes/alt text, coordinate bounds and a maximum of three published related services. Invalid submissions remain drafts and retain prior valid field values.
+Short introductions and full descriptions are separate fields. Required-field checks keep invalid services as drafts. Reviews older than twelve months are flagged. Images use links or bundled illustrations; uploads are disabled because demo file storage is temporary.
 
-Editors work on their own drafts and can submit Pending Review. Publishers can review others’ content, publish and maintain home content. Administrators also manage settings and private messages. WordPress maps object-level editing capabilities so that an Editor cannot alter published or another author’s content. Messages have a read-only content panel. Upload capability is denied for all roles; images are static frontend files or URLs.
+```mermaid
+flowchart LR
+    Draft["Editor writes draft"] --> Review["Submit for review"]
+    Review --> Publish["Publisher approves"]
+    Publish --> Rebuild["Website rebuild succeeds"]
+    Rebuild --> Public["Visitors see update"]
+```
 
-## Hosting
+Give the five editors individual accounts. Editors manage their own unpublished work; designated publishers review, publish and maintain home content. Administrators manage settings and private enquiries. Drafts are excluded from public responses. Previously published pages can remain visible until the website is rebuilt.
 
-The demonstration uses free Render and Vercel plans plus an existing MySQL VPS. The WordPress container filesystem is disposable. Content, options and users persist in MySQL; stable authentication salts come from Render. Bootstrap reinstalls filesystem assets, activates the plugin/theme and runs idempotent seed setup. The provided WordPress image family currently resolves to 6.9.4; supplied deployment assets are preserved. The test image pins its verified full tag and digest. Production should review and pin application base images as part of release preparation.
+## 3. Hosting — locations, environments and releases
 
-For production, propose AWS `ap-southeast-1` (Singapore) or an equivalent Singapore region: CDN/static frontend, managed container hosting for WordPress, managed MySQL with private networking, and encrypted backups. This is a residency proposal, not a guarantee: separately verify CDN caches, logs, email providers, support access and subprocessors. Keep dev, staging and production databases, salts, origins and deployment hooks separate.
+**Current:** Vercel serves public pages, Render's configuration selects Singapore for WordPress, and an existing VPS hosts MySQL. Local development uses Docker. Separate staging and automated release checks remain proposed.
 
-CI/CD proposal: Git push → install from lockfiles → PHP style/security checks and disposable MySQL tests → build an immutable WordPress image → deploy to staging → build/export the frontend against staging → browser/accessibility checks → approved production image and frontend deployment. Production database migrations and restore checks precede promotion. Roll back application images and frontend releases together; do not restore a database merely to roll back code.
+**Residency gap:** Vercel caches pages globally, so the current setup cannot promise every hosted copy stays in Singapore. Selecting a Singapore function region would not change this static website's delivery. See [Vercel's delivery-network documentation](https://vercel.com/docs/cdn).
 
-## Security
+**Production proposal:** retain the application and content model; use paid, always-on Render WordPress in Singapore, dedicated MySQL and static-website servers in DigitalOcean Singapore (`sgp1`), and encrypted Singapore backup storage. Replace the Vercel-specific trigger with a reliable Singapore build job. These changes are not implemented. Singapore is available on [Render](https://render.com/docs/regions) and [DigitalOcean](https://docs.digitalocean.com/platform/regional-availability/).
 
-HTTPS protects browser and administrative traffic. Public API routes have explicit permission callbacks; contact is the only public write operation. Admin writes use WordPress nonces and mapped capabilities. Input is sanitized, output escaped and content HTML allow-listed; the shortcode inserts API values with `textContent`. Parameterized WordPress query APIs implement search and filtering. The plugin disables XML-RPC and anonymous core user enumeration. Demo pages have `noindex` metadata and a robots disallow rule; neither mechanism is access control.
+Keep content-bearing builds, logs and backups in Singapore. Verify provider support access, email processing and backup locations before approval. Disable external maps and unapproved image hosts pending review. This scope covers provider-held copies; visitors still receive requested public pages.
 
-CORS uses exact configured origins, no credentials, a `Vary: Origin` header and bounded allowed methods/headers. Origin-less clients can still call this public endpoint; CORS is not authentication. Contact combines a honeypot, a three-second/two-hour form window, 16 KiB body bound, per-field limits and five attempts per connection-IP hash per hour. Hashes expire; application rate limiting does not persist raw IPs. Hosting access logs are a separate concern. Reverse-proxy address handling must be verified before production: a shared proxy IP may conservatively throttle multiple visitors. Transients are adequate for the demo but are not an atomic distributed rate limiter.
+| Environment | Purpose and separation                                                               |
+| ----------- | ------------------------------------------------------------------------------------ |
+| Development | Local Docker, fictional data, no production enquiries                                |
+| Staging     | Private Singapore test site; separate database, accounts, secrets and update trigger |
+| Production  | Live Singapore services, restricted access, scheduled backups                        |
 
-Keep salts, DB/admin passwords and deploy-hook URLs outside source control and public frontend variables. Administrators should enable MFA in production, use unique accounts, rotate secrets and audit role changes. Restrict database traffic to reviewed Render outbound sources and grant each source account only the CareConnect database. `MYSQLI_CLIENT_SSL` encrypts traffic but the supplied setup does not verify the self-signed server certificate. Production should use a verified CA or private tunnel/network. The VPS setup script should receive individual IPv4 addresses: its per-IP database user syntax is not a verified CIDR implementation. Review provider firewall rules before use.
+**Proposed release path:** Git change → automated checks → packaged WordPress release and website build → staging review → approved production release. Build live content on a Singapore worker. Retain previous releases for rollback without overwriting newer enquiries. Currently, Render uses the repository's Docker configuration; Vercel builds from `web/` with `npm run build`.
 
-## Operations
+## 4. Security — protecting visitors and the team
 
-Planning load is 20,000 visits/month and five editors. Static delivery removes WordPress from most page views. Monitor published API availability, cold-start latency, contact storage errors, failed email, database health and Vercel hook/build failures. Use a synthetic search and a private-storage contact test with fictional information, controlled frequency and cleanup. Redact message bodies, emails, credentials and deploy-hook URLs from operational logs. Investigate repeated rate limits and abuse; add alerting for failed rebuilds because an old export can otherwise remain visible.
+| Area                               | Existing protection                                                                                                                                    | Production addition                                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Connections                        | HTTPS hosting; supplied setup configures database encryption                                                                                           | Verify live controls and database certificate identity; restrict database access to approved servers          |
+| Admin                              | Separate editor, publisher and administrator permissions                                                                                               | MFA: a second login check; remove demo access and protect the admin entrance                                  |
+| Malicious content and forged edits | Validate entries, limit formatting, safely display text, use WordPress's structured database queries, check editing permissions and verify admin forms | Maintain security updates and repeat access checks after releases                                             |
+| Spam and automated attacks         | Hidden bot field, timing checks, submission and size limits                                                                                            | Login throttling, firewall rules and flood protection; verify visitor-address handling behind hosting proxies |
+| Secrets and backups                | Passwords and deployment links stay outside public code                                                                                                | Rotate credentials; encrypt backups with separately restricted access                                         |
 
-Proposed production objectives are **RPO 24 hours** and **RTO 4 hours**. Take encrypted daily database backups with retention appropriate to policy, separate access from application credentials and test restoration quarterly into an isolated environment. Retain versioned container images and static exports. A recovery drill restores the DB, checks roles and private-content boundaries, deploys the matching application and rebuilds the frontend. These targets and procedures are proposals, not achieved service guarantees for the free-tier demo.
+Logs must omit enquiry text, emails and secrets. Agree retention before launch; a starting proposal is 90 days for enquiries and 30 days for logs. Backup expiry and deletion procedures must follow that policy.
 
-## Cost
+## 5. Operations — detecting problems and recovering
 
-Planning assumptions: low traffic above, five editors, one small application workload, modest database/storage, daily backups and no paid SMS or production email campaign. Figures are illustrative monthly USD **estimates, verify** with the selected provider; no current price quotation is implied.
+Assign a technical owner and backup contact. Check pages and search every five minutes. Alert on sustained failures, low database memory/disk space, failed backups, failed rebuilds and email errors. Verify enquiry storage using controlled fictional submissions and cleanup. Keep restricted troubleshooting logs in Singapore.
 
-| Item | Demo | Production estimate, verify |
-|---|---|---|
-| Static delivery | Vercel free tier, subject to eligibility and limits | $0–25 |
-| CMS application | Render free tier, sleeps when idle | $15–40 |
-| MySQL | Existing VPS; incremental hosting not calculated | $25–70 |
-| Backups, logs, transactional email | Not production provisioned | $10–30 |
-| Total incremental platform budget | Free tiers + existing VPS costs | $50–165, excluding tax and engineering |
+Take an encrypted, consistent database backup nightly and before risky changes. Retain 30 daily copies in separate Singapore storage, plus versioned application releases and website exports. Check completion daily; practise restoration quarterly in isolation.
 
-## Risks and next steps
+| Proposed target   | Client meaning                                                    |
+| ----------------- | ----------------------------------------------------------------- |
+| **RPO: 24 hours** | A major failure could lose up to one day of edits and enquiries   |
+| **RTO: 4 hours**  | Aim to restore service within four hours of declaring an incident |
 
-Free-tier sleep and rebuild failures affect freshness and search availability. Demo email has no delivery guarantee. Static exports retain withdrawn content until deployment/cache removal; the deploy hook has a sixty-second debounce and does not implement a durable job queue. Add monitoring, retryable queued rebuilds and a content-withdrawal policy before production. The application base image and bundled WP-CLI supplied by the brief remain rolling references and need release pinning/upgrade automation.
+Restore the database and compatible application, check accounts and private-content protection, rebuild pages, then test search and enquiries. These targets are not demonstrated guarantees: they require an available responder. A Singapore-wide outage may take longer because overseas recovery copies are excluded.
 
-Other explicit next steps are Admin MFA, certificate-verified DB TLS, stricter atomic edge rate limiting/CAPTCHA if abuse warrants it, a privacy retention schedule, verified SMTP, persistent media only if uploads become necessary, and backup/restore drills. English is the only language; PHP strings and a generated POT support future translation, while frontend localization would require a deliberate dictionary/routes change. Optional service maps are included and use fictional illustrative coordinates; OpenStreetMap introduces a third-party network request on those detail pages.
+## 6. Cost — estimated monthly budget
+
+**Estimates, verify; USD/month.** Assume 20,000 visits, four pages per visit and 0.5 MB per page: approximately 40 GB of public delivery. Allow five WordPress accounts, modest storage, one production instance per component and one staging server. Peak capacity still needs testing.
+
+| Item                                          | Monthly allowance |
+| --------------------------------------------- | ----------------: |
+| Singapore public-website server, 1 GB memory  |                $6 |
+| Always-on Render WordPress, 2 GB memory       |               $25 |
+| Dedicated Singapore MySQL server, 2 GB memory |               $12 |
+| Separate staging server, 2 GB memory          |               $12 |
+| Singapore backup storage                      |                $5 |
+| Monitoring, email and usage contingency       |             $5–20 |
+| **Estimated total**                           |        **$65–80** |
+
+Baselines checked on 28 October 2026: [DigitalOcean servers](https://www.digitalocean.com/pricing/droplets), [Render](https://render.com/pricing), [backup storage](https://www.digitalocean.com/pricing/spaces-object-storage). The contingency is a planning allowance. Backup storage must be private with global delivery disabled. Excludes tax, domains, engineering/on-call labour and redundant standby servers. Editor accounts do not require five hosting-dashboard seats. The current demo uses free tiers plus an existing VPS; its bill has not been reviewed.
+
+## 7. Risks and next steps — another working week
+
+The shared 1 GB VPS has already experienced a MySQL memory failure. Free Render services can sleep. Failed rebuilds leave old information visible; rapid edits within the plugin's one-minute trigger window can be skipped without a retry queue. Live search may find services before their pages are rebuilt. Urgent withdrawals need an explicit removal process.
+
+| When     | Deliverable                                                                                                                 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Days 1–2 | Confirm residency and provider terms; provision staging and dedicated capacity; enable MFA and verified database encryption |
+| Days 3–4 | Add monitored, retryable publishing; rehearse urgent withdrawal; schedule backups and demonstrate restoration               |
+| Day 5    | Test peak traffic, editorial roles and enquiries; review alerts, retention and release checks with the client               |
+
+A second language, image uploads, guaranteed email delivery and automatic failover remain outside the implemented scope. Approve production after evidence of a successful publishing cycle, recovery drill and residency review.
