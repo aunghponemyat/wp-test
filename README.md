@@ -27,8 +27,8 @@ For editor and publisher level access with content creation privileges, give it 
 
 Credentials
 ```
-Editor Username: demo-editor
-Publisher Username: demo-publisher
+Editor Username: demo_editor
+Publisher Username: demo_publisher
 ```
 Please contact [developer](mailto:aghonemyat@gmail.com) for the password.
 
