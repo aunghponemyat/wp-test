@@ -18,6 +18,18 @@ A fictional, accessible community-care directory with a WordPress editorial back
 
 The guide distinguishes implemented features from production proposals. Vercel caches public pages globally, so the existing setup does **not** establish Singapore-only residency for all copies. MFA, monitored publishing, scheduled backups and recovery targets remain production work. The proposed Singapore hosting and costs do not describe changes applied to the running services.
 
+## Sample Public Showcase
+
+For visitor experience, you can test the website here: **https://wp-ccreiner.vercel.app**
+
+For editor and publisher level access with content creation privileges, give it a try here: **https://careconnect-wp.onrender.com/wp-admin/**
+Credentials
+```
+Editor Username: demo-editor
+Publisher Username: demo-publisher
+```
+Please contact [developer](aghonemyat@gmail.com) for the password.
+
 ## Local setup
 
 Prerequisites: Docker with Compose, Node meeting `web/node_modules/next/package.json`'s engine requirement, and npm. Exact frontend and PHP dependency versions are recorded in their manifests and lockfiles. PHP/Composer on the host are optional because the PHP checks can run in Docker.
